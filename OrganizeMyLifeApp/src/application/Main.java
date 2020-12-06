@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-
+import javafx.scene.control.TextField;
 
 
 public class Main extends Application {
@@ -23,6 +23,7 @@ public class Main extends Application {
 			
 			//create new buttons, lists, and labels
 			Button btn = new Button("Add an Event");
+			TextField eventName = new TextField();
 			Button btn2 = new Button("Delete an Event");
 			ListView<String> list = new ListView<String>();
 			Label lbl = new Label("Click the button to add some events :)");
@@ -31,16 +32,25 @@ public class Main extends Application {
 			VBox pane = new VBox();
 			pane.getChildren().add(lbl);
 			pane.getChildren().add(btn);
+			pane.getChildren().add(eventName);
 			pane.getChildren().add(btn2);
 			pane.getChildren().add(list);
 			
 			//add event when button 1 is clicked
 			btn.setOnAction(event -> {
-				String text = "Event " + (list.getItems().size() + 1);
-				list.getItems().add(list.getItems().size(),text);
+				String text;
+				if(!eventName.getText().isEmpty()) {
+					text = eventName.getText();
+				}
+				else {
+					text = "Event " + (list.getItems().size() + 1);
+				}
+				list.getItems().add(list.getItems().size(), text);
 				lbl.setText("You have a total of " + list.getItems().size() + " event(s)!");
 			}
 			);
+			
+			
 			
 			
 			//remove event when button 2 is clicked
