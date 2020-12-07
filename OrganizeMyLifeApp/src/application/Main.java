@@ -2,6 +2,7 @@ package application;
 	
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -25,7 +26,7 @@ public class Main extends Application {
 			//title of the app
 			primaryStage.setTitle("Organize My Life");
 			
-			//create new buttons, lists, and labels for name
+			
 			
 			VBox pane = new VBox();
 			
@@ -52,8 +53,7 @@ public class Main extends Application {
 			HBox.setMargin(reminderName, new Insets(0,width/50,0,width/50));
 			HBox.setMargin(eventName, new Insets(0,width/50,0,width/50));
 			
-			
-			
+
 			reminderBox.getChildren().add(reminderLbl);
 			reminderBox.getChildren().add(reminderName);
 			reminderBox.getChildren().add(reminderAdd);
@@ -114,7 +114,7 @@ public class Main extends Application {
 					text = reminderName.getText();
 				}
 				else {
-					text = "Event " + (reminderList.getItems().size() + 1);
+					text = "Reminder " + (reminderList.getItems().size());
 				}
 				reminderList.getItems().add(reminderList.getItems().size(), text);
 				reminderName.clear();
@@ -128,7 +128,7 @@ public class Main extends Application {
 					text = eventName.getText();
 				}
 				else {
-					text = "Event " + (eventList.getItems().size() + 1);
+					text = "Event " + (eventList.getItems().size());
 				}
 				eventList.getItems().add(eventList.getItems().size(), text);
 				eventName.clear();
@@ -136,35 +136,200 @@ public class Main extends Application {
 			}
 			);
 			
+			
+			Popup eventPopup = new Popup(); 
+			eventPopup.setHeight(height/2);
+			eventPopup.setWidth(width/2);
+
+			BorderPane eventPopBox = new BorderPane();
+			Button eventYes = new Button("Yes");
+			Button eventNo = new Button("No");
+			Label eventConfirm = new Label("Are you sure you want to delete this event?");
+			
+			eventPopBox.setTop(eventConfirm);
+			eventPopBox.setLeft(eventYes);
+			eventPopBox.setRight(eventNo);
+			
+			eventPopBox.setPadding(new Insets(height/40, width/40, height/40, width/40));
+
+			eventPopBox.setStyle(" -fx-background-color: white;" + "-fx-border-color: black");
+			eventPopup.getContent().add(eventPopBox);
+			
 			eventDelete.setOnAction(event -> {
 				String selectedItem = eventList.getSelectionModel().getSelectedItem();
 				if(selectedItem != null && eventList.getSelectionModel().getSelectedIndex() != 0) {
-					eventList.getItems().remove(eventList.getSelectionModel().getSelectedIndex());
+					eventPopup.show(primaryStage);
 				}
+				
 			}
 			);
 			
+			eventYes.setOnAction(event -> {
+				eventList.getItems().remove(eventList.getSelectionModel().getSelectedIndex());
+				eventList.getSelectionModel().clearSelection();
+				eventPopup.hide();
+			}
+			);
+			
+			eventNo.setOnAction(event -> {
+				eventList.getSelectionModel().clearSelection();
+				eventPopup.hide();
+			}
+			);
+			
+			Popup reminderPopup = new Popup(); 
+			reminderPopup.setHeight(height/2);
+			reminderPopup.setWidth(width/2);
+
+			BorderPane reminderPopBox = new BorderPane();
+			Button reminderYes = new Button("Yes");
+			Button reminderNo = new Button("No");
+			Label reminderConfirm = new Label("Are you sure you want to delete this reminder?");
+			
+			reminderPopBox.setTop(reminderConfirm);
+			reminderPopBox.setLeft(reminderYes);
+			reminderPopBox.setRight(reminderNo);
+			
+			reminderPopBox.setPadding(new Insets(height/40, width/40, height/40, width/40));
+
+			reminderPopBox.setStyle(" -fx-background-color: white;" + "-fx-border-color: black");
+			reminderPopup.getContent().add(reminderPopBox);
 			
 			reminderDelete.setOnAction(event -> {
 				String selectedItem = reminderList.getSelectionModel().getSelectedItem();
 				if(selectedItem != null && reminderList.getSelectionModel().getSelectedIndex() != 0) {
-					reminderList.getItems().remove(reminderList.getSelectionModel().getSelectedIndex());
+					reminderPopup.show(primaryStage);
+				}
+				
+			}
+			);
+			
+			reminderYes.setOnAction(event -> {
+				reminderList.getItems().remove(reminderList.getSelectionModel().getSelectedIndex());
+				reminderList.getSelectionModel().clearSelection();
+				reminderPopup.hide();
+			}
+			);
+			
+			reminderNo.setOnAction(event -> {
+				reminderList.getSelectionModel().clearSelection();
+				reminderPopup.hide();
+			}
+			);
+			
+			//edit event functionality
+			
+			Popup eventEditPop = new Popup(); 
+			eventEditPop.setHeight(height/2);
+			eventEditPop.setWidth(width/2);
+
+			BorderPane eventEditBox = new BorderPane();
+			Button eventChange = new Button("Confirm");
+			Button eventCancel = new Button("Cancel");
+			Label eventEditConfirm = new Label("What would you like to change this event to?");
+			TextField eventEditText = new TextField();
+			
+			eventEditBox.setTop(eventEditConfirm);
+			eventEditBox.setCenter(eventEditText);
+			eventEditBox.setLeft(eventCancel);
+			eventEditBox.setRight(eventChange);
+			
+			eventEditBox.setPadding(new Insets(height/40, width/40, height/40, width/40));
+
+			eventEditBox.setStyle(" -fx-background-color: white;" + "-fx-border-color: black");
+			eventEditPop.getContent().add(eventEditBox);
+			
+			
+			eventEdit.setOnAction(event -> {
+				String selectedItem = eventList.getSelectionModel().getSelectedItem();
+				if(selectedItem != null && eventList.getSelectionModel().getSelectedIndex() != 0) {
+					eventEditPop.show(primaryStage);
 				}
 			}
 			);
 			
-			
-			
-			/*
-			//remove event when button 2 is clicked
-			btn2.setOnAction(event -> {
-				if(list.getItems().size() > 0) {
-					list.getItems().remove(list.getItems().size() - 1);
+			eventChange.setOnAction(event -> {
+				eventList.getSelectionModel().getSelectedItem();
+				
+				String text;
+				if(!eventEditText.getText().isEmpty()) {
+					text = eventEditText.getText();
 				}
-				lbl.setText("You have a total of " + list.getItems().size() + " event(s)!");
+				else {
+					text = "Event " + (eventList.getSelectionModel().getSelectedIndex());
+				}
+				eventList.getItems().set(eventList.getSelectionModel().getSelectedIndex(), text);
+				eventList.getSelectionModel().clearSelection();
+				eventEditText.clear();
+				eventEditPop.hide();
 			}
 			);
-			*/
+			
+			eventCancel.setOnAction(event -> {
+				eventList.getSelectionModel().clearSelection();
+				eventEditPop.hide();
+				eventEditText.clear();
+			}
+			);
+			
+			//edit reminder functionality
+			
+			Popup reminderEditPop = new Popup(); 
+			reminderEditPop.setHeight(height/2);
+			reminderEditPop.setWidth(width/2);
+
+			BorderPane reminderEditBox = new BorderPane();
+			Button reminderChange = new Button("Confirm");
+			Button reminderCancel = new Button("Cancel");
+			Label reminderEditConfirm = new Label("What would you like to change this reminder to?");
+			TextField reminderEditText = new TextField();
+			
+			reminderEditBox.setTop(reminderEditConfirm);
+			reminderEditBox.setCenter(reminderEditText);
+			reminderEditBox.setLeft(reminderCancel);
+			reminderEditBox.setRight(reminderChange);
+			
+			reminderEditBox.setPadding(new Insets(height/40, width/40, height/40, width/40));
+
+			reminderEditBox.setStyle(" -fx-background-color: white;" + "-fx-border-color: black");
+			reminderEditPop.getContent().add(reminderEditBox);
+			
+			
+			reminderEdit.setOnAction(event -> {
+				String selectedItem = reminderList.getSelectionModel().getSelectedItem();
+				if(selectedItem != null && reminderList.getSelectionModel().getSelectedIndex() != 0) {
+					reminderEditPop.show(primaryStage);
+				}
+			}
+			);
+			
+			reminderChange.setOnAction(event -> {
+				reminderList.getSelectionModel().getSelectedItem();
+				
+				String text;
+				if(!reminderEditText.getText().isEmpty()) {
+					text = reminderEditText.getText();
+				}
+				else {
+					text = "Reminder " + (reminderList.getSelectionModel().getSelectedIndex());
+				}
+				reminderList.getItems().set(reminderList.getSelectionModel().getSelectedIndex(), text);
+				reminderList.getSelectionModel().clearSelection();
+				reminderEditText.clear();
+				reminderEditPop.hide();
+			}
+			);
+			
+			reminderCancel.setOnAction(event -> {
+				reminderList.getSelectionModel().clearSelection();
+				reminderEditPop.hide();
+				reminderEditText.clear();
+			}
+			);
+
+			
+			pane.setStyle(" -fx-background-color: #e8d8e3" );
+
 			//create scene
 			Scene scene = new Scene(pane,width,height);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -178,11 +343,6 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-
-	
 	
 	
 	public static void main(String[] args) {
